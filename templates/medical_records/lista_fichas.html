@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mx-auto mt-10">
+    <h2 class="text-2xl font-bold mb-6">Fichas Médicas</h2>
+    <div class="mb-4">
+        <a href="{% url 'medical_records:crear_ficha' %}" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded inline-block">
+            Crear Nueva Ficha Médica
+        </a>
+    </div>
+    <div class="bg-white shadow-md rounded">
+        <table class="min-w-full">
+            <thead class="bg-gray-200">
+                <tr>
+                    <th class="py-3 px-4 text-left">Mascota</th>
+                    <th class="py-3 px-4 text-left">Fecha Creación</th>
+                    <th class="py-3 px-4 text-left">Estado</th>
+                    <th class="py-3 px-4 text-left">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ficha in fichas %}
+                <tr class="border-b">
+                    <td class="py-3 px-4">{{ ficha.mascota.nombre }}</td>
+                    <td class="py-3 px-4">{{ ficha.fecha_creacion|date:"d/m/Y" }}</td>
+                    <td class="py-3 px-4">{{ ficha.get_estado_display }}</td>
+                    <td class="py-3 px-4">
+                        <a href="{% url 'medical_records:detalle_ficha' ficha.id %}" class="text-blue-500 hover:text-blue-700">
+                            Ver Detalles
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="text-center py-4">No hay fichas médicas registradas</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

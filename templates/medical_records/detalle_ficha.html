@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mx-auto mt-10">
+    <div class="bg-white shadow-md rounded-lg overflow-hidden">
+        <div class="p-6">
+            <h2 class="text-2xl font-bold mb-6">Detalles de Ficha Médica</h2>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">Información de la Mascota</h3>
+                    <p><strong>Nombre:</strong> {{ ficha.mascota.nombre }}</p>
+                    <p><strong>Especie:</strong> {{ ficha.mascota.especie }}</p>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">Detalles Médicos</h3>
+                    <p><strong>Peso:</strong> {{ ficha.peso|default:"No registrado" }} kg</p>
+                    <p><strong>Temperatura:</strong> {{ ficha.temperatura|default:"No registrada" }}°C</p>
+                </div>
+            </div>
+            
+            <div class="mt-6">
+                <h3 class="text-xl font-semibold mb-4">Diagnóstico</h3>
+                <p><strong>Motivo de Consulta:</strong> {{ ficha.motivo_consulta }}</p>
+                <p><strong>Síntomas:</strong> {{ ficha.sintomas }}</p>
+                <p><strong>Diagnóstico Actual:</strong> {{ ficha.diagnostico_actual }}</p>
+            </div>
+            
+            <div class="mt-6">
+                <h3 class="text-xl font-semibold mb-4">Tratamiento</h3>
+                <p><strong>Tratamiento Recomendado:</strong> {{ ficha.tratamiento_recomendado }}</p>
+                <p><strong>Medicamentos:</strong> {{ ficha.medicamentos|default:"Ninguno" }}</p>
+            </div>
+            
+            <div class="mt-6">
+                <h3 class="text-xl font-semibold mb-4">Seguimiento</h3>
+                <p><strong>Estado:</strong> {{ ficha.get_estado_display }}</p>
+                <p><strong>Próxima Consulta:</strong> {{ ficha.proxima_consulta|default:"No programada" }}</p>
+            </div>
+            
+            <div class="mt-6 flex justify-between">
+                <a href="{% url 'medical_records:lista_fichas' %}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
+                    Volver a Lista de Fichas
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

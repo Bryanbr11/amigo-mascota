@@ -14,13 +14,13 @@ def register(request):
             login(request, user)
             messages.success(request, '¡Registro exitoso!')
             if user.is_superuser:
-                return redirect('dashboard:admin_dashboard')
+                return redirect('dashboard:admin')
             elif user.is_veterinario:
-                return redirect('dashboard:veterinario_dashboard')
+                return redirect('dashboard:veterinario')
             elif user.is_secretaria:
-                return redirect('dashboard:secretaria_dashboard')
+                return redirect('dashboard:secretaria')
             else:
-                return redirect('dashboard:cliente_dashboard')
+                return redirect('dashboard:cliente')
     else:
         form = CustomUserCreationForm()
     return render(request, 'users/register.html', {'form': form})
@@ -42,13 +42,13 @@ def custom_login(request):
     if request.user.is_authenticated:
         # Si ya está autenticado, redirigir según su rol
         if request.user.is_superuser:
-            return redirect('dashboard:admin_dashboard')
+            return redirect('dashboard:admin')
         elif request.user.is_veterinario:
-            return redirect('dashboard:veterinario_dashboard')
+            return redirect('dashboard:veterinario')
         elif request.user.is_secretaria:
-            return redirect('dashboard:secretaria_dashboard')
+            return redirect('dashboard:secretaria')
         else:
-            return redirect('dashboard:cliente_dashboard')
+            return redirect('dashboard:cliente')
 
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -75,13 +75,13 @@ def custom_login(request):
                 
                 # Redirigir según el rol del usuario
                 if user.is_superuser:
-                    return redirect('dashboard:admin_dashboard')
+                    return redirect('dashboard:admin')
                 elif user.is_veterinario:
-                    return redirect('dashboard:veterinario_dashboard')
+                    return redirect('dashboard:veterinario')
                 elif user.is_secretaria:
-                    return redirect('dashboard:secretaria_dashboard')
+                    return redirect('dashboard:secretaria')
                 else:
-                    return redirect('dashboard:cliente_dashboard')
+                    return redirect('dashboard:cliente')
             else:
                 messages.error(request, 'Tu cuenta está desactivada')
         else:

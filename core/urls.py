@@ -26,4 +26,5 @@ urlpatterns = [
     path('dashboard/', include('dashboard.urls')),  # Agregar URLs del dashboard
     path('appointments/', include('appointments.urls')),  # Agregar URLs de appointments
     path('consulta/', include('consulta.urls')),  # Agregar URLs de consulta
+    path('fichas-medicas/', include('medical_records.urls')),  # Agregar URLs de fichas médicas
 ]

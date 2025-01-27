@@ -33,7 +33,14 @@ def is_cliente(user):
 def home_view(request):
     # Redirige al dashboard si el usuario está autenticado
     if request.user.is_authenticated:
-        return redirect('dashboard')
+        if request.user.is_superuser:
+            return redirect('dashboard:admin')
+        elif request.user.is_veterinario:
+            return redirect('dashboard:veterinario')
+        elif request.user.is_secretaria:
+            return redirect('dashboard:secretaria')
+        else:
+            return redirect('dashboard:cliente')
     # Si no está autenticado, muestra una página de bienvenida
     return render(request, 'home.html')
 
