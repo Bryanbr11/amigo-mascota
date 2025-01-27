@@ -1,0 +1,228 @@
+{% extends 'home.html' %}
+
+{% block title %}Panel de Administración{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-900">Panel de Administración</h1>
+        <p class="mt-2 text-gray-600">Gestión general de la veterinaria</p>
+    </div>
+
+    <!-- Estadísticas generales -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">Total Clientes</h3>
+            <p class="text-3xl font-bold text-blue-600">{{ total_clientes }}</p>
+            <p class="text-sm text-gray-500 mt-1">Activos: {{ clientes_activos }}</p>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">Total Mascotas</h3>
+            <p class="text-3xl font-bold text-green-600">{{ total_mascotas }}</p>
+            <p class="text-sm text-gray-500 mt-1">Registradas este mes: {{ mascotas_nuevas }}</p>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">Citas Pendientes</h3>
+            <p class="text-3xl font-bold text-yellow-600">{{ citas_pendientes }}</p>
+            <p class="text-sm text-gray-500 mt-1">Para hoy: {{ citas_hoy }}</p>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">Ingresos del Mes</h3>
+            <p class="text-3xl font-bold text-purple-600">S/. {{ ingresos_mes }}</p>
+            <p class="text-sm text-gray-500 mt-1">Consultas: {{ total_consultas_mes }}</p>
+        </div>
+    </div>
+
+    <!-- Gráficos y reportes -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">Citas por Día</h3>
+            <div class="h-64">
+                <!-- Aquí iría el gráfico de citas -->
+                <canvas id="citasChart"></canvas>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">Ingresos por Servicio</h3>
+            <div class="h-64">
+                <!-- Aquí iría el gráfico de ingresos -->
+                <canvas id="ingresosChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gestión de personal -->
+    <div class="bg-white rounded-lg shadow mb-8">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h2 class="text-xl font-semibold text-gray-800">Personal</h2>
+        </div>
+        <div class="p-6">
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead>
+                        <tr>
+                            <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Nombre
+                            </th>
+                            <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Cargo
+                            </th>
+                            <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Estado
+                            </th>
+                            <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Última actividad
+                            </th>
+                            <th class="px-6 py-3 bg-gray-50"></th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        {% for empleado in empleados %}
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0 h-10 w-10">
+                                        {% if empleado.avatar %}
+                                        <img class="h-10 w-10 rounded-full" src="{{ empleado.avatar.url }}" alt="">
+                                        {% else %}
+                                        <div class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
+                                            <span class="text-blue-600 font-medium">{{ empleado.get_initials }}</span>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="ml-4">
+                                        <div class="text-sm font-medium text-gray-900">
+                                            {{ empleado.get_full_name }}
+                                        </div>
+                                        <div class="text-sm text-gray-500">
+                                            {{ empleado.email }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="text-sm text-gray-900">{{ empleado.cargo }}</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                    {% if empleado.is_active %}bg-green-100 text-green-800{% else %}bg-red-100 text-red-800{% endif %}">
+                                    {{ empleado.is_active|yesno:"Activo,Inactivo" }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                {{ empleado.last_login|default:"Nunca"|date:"d/m/Y H:i" }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <a href="{% url 'dashboard:editar_usuario' empleado.id %}" class="text-blue-600 hover:text-blue-900">
+                                    Editar
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="px-6 py-4 text-center text-gray-500">
+                                No hay personal registrado
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Acciones administrativas -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">Gestión de Usuarios</h3>
+            <div class="space-y-3">
+                <a href="{% url 'dashboard:crear_usuario' %}" class="block text-blue-600 hover:text-blue-800">→ Crear nuevo usuario</a>
+                <a href="{% url 'dashboard:gestionar_permisos' %}" class="block text-blue-600 hover:text-blue-800">→ Gestionar permisos</a>
+                <a href="{% url 'dashboard:registros_actividad' %}" class="block text-blue-600 hover:text-blue-800">→ Ver registros de actividad</a>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">Reportes</h3>
+            <div class="space-y-3">
+                <a href="{% url 'dashboard:reporte_ingresos' %}" class="block text-blue-600 hover:text-blue-800">→ Reporte de ingresos</a>
+                <a href="{% url 'dashboard:estadisticas_servicios' %}" class="block text-blue-600 hover:text-blue-800">→ Estadísticas de servicios</a>
+                <a href="{% url 'dashboard:satisfaccion_clientes' %}" class="block text-blue-600 hover:text-blue-800">→ Satisfacción de clientes</a>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">Configuración</h3>
+            <div class="space-y-3">
+                <a href="{% url 'dashboard:configuracion_general' %}" class="block text-blue-600 hover:text-blue-800">→ Configuración general</a>
+                <a href="{% url 'dashboard:gestionar_servicios' %}" class="block text-blue-600 hover:text-blue-800">→ Gestionar servicios</a>
+                <a href="{% url 'dashboard:respaldo_datos' %}" class="block text-blue-600 hover:text-blue-800">→ Respaldo de datos</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Gráfico de citas por día
+    const citasCtx = document.getElementById('citasChart').getContext('2d');
+    new Chart(citasCtx, {
+        type: 'line',
+        data: {
+            labels: [{% for item in citas_por_dia %}'{{ item.fecha }}'{% if not forloop.last %}, {% endif %}{% endfor %}],
+            datasets: [{
+                label: 'Citas',
+                data: [{% for item in citas_por_dia %}{{ item.total }}{% if not forloop.last %}, {% endif %}{% endfor %}],
+                borderColor: 'rgb(59, 130, 246)',
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    }
+                }
+            }
+        }
+    });
+
+    // Gráfico de ingresos por servicio
+    const ingresosCtx = document.getElementById('ingresosChart').getContext('2d');
+    new Chart(ingresosCtx, {
+        type: 'doughnut',
+        data: {
+            labels: [{% for item in ingresos_por_servicio %}'{{ item.tipo_servicio }}'{% if not forloop.last %}, {% endif %}{% endfor %}],
+            datasets: [{
+                data: [{% for item in ingresos_por_servicio %}{{ item.total }}{% if not forloop.last %}, {% endif %}{% endfor %}],
+                backgroundColor: [
+                    'rgb(59, 130, 246)',
+                    'rgb(16, 185, 129)',
+                    'rgb(245, 158, 11)',
+                    'rgb(239, 68, 68)',
+                    'rgb(139, 92, 246)'
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}
+{% endblock %} 

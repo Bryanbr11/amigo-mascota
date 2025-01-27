@@ -1,0 +1,128 @@
+{% extends 'home.html' %}
+
+{% block title %}Panel de Control - Cliente{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-900">Bienvenido, {{ user.get_full_name }}</h1>
+        <p class="mt-2 text-gray-600">Panel de control de cliente</p>
+    </div>
+
+    <!-- Resumen de información -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">Mis Mascotas</h3>
+            <p class="text-3xl font-bold text-blue-600">{{ mascotas_count }}</p>
+            <a href="{% url 'mascotas:lista' %}" class="text-blue-600 hover:text-blue-800 text-sm mt-2 inline-block">
+                Ver todas mis mascotas →
+            </a>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">Próximas Citas</h3>
+            <p class="text-3xl font-bold text-green-600">{{ proximas_citas_count }}</p>
+            <a href="{% url 'appointments:lista_citas' %}" class="text-blue-600 hover:text-blue-800 text-sm mt-2 inline-block">
+                Ver todas mis citas →
+            </a>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">Consultas Recientes</h3>
+            <p class="text-3xl font-bold text-purple-600">{{ consultas_count }}</p>
+            <a href="{% url 'consulta:lista_consultas' %}" class="text-blue-600 hover:text-blue-800 text-sm mt-2 inline-block">
+                Ver historial de consultas →
+            </a>
+        </div>
+    </div>
+
+    <!-- Próximas citas -->
+    <div class="bg-white rounded-lg shadow mb-8">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h2 class="text-xl font-semibold text-gray-800">Próximas Citas</h2>
+        </div>
+        <div class="p-6">
+            {% if proximas_citas %}
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead>
+                        <tr>
+                            <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Fecha
+                            </th>
+                            <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Mascota
+                            </th>
+                            <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Veterinario
+                            </th>
+                            <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Estado
+                            </th>
+                            <th class="px-6 py-3 bg-gray-50"></th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        {% for cita in proximas_citas %}
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                {{ cita.fecha|date:"d/m/Y" }} {{ cita.hora|time:"H:i" }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                {{ cita.mascota.nombre }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                Dr. {{ cita.veterinario.get_full_name }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
+                                    {% if cita.estado == 'PENDIENTE' %}bg-yellow-100 text-yellow-800
+                                    {% elif cita.estado == 'CONFIRMADA' %}bg-green-100 text-green-800
+                                    {% elif cita.estado == 'CANCELADA' %}bg-red-100 text-red-800{% endif %}">
+                                    {{ cita.get_estado_display }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <a href="{% url 'appointments:detalle_cita' cita.id %}" class="text-blue-600 hover:text-blue-900">
+                                    Ver detalles
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-gray-600 text-center py-4">No tienes citas próximas programadas.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Acciones rápidas -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">Acciones Rápidas</h3>
+            <div class="space-y-4">
+                <a href="{% url 'appointments:crear_cita' %}" 
+                   class="block w-full text-center bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-300">
+                    Agendar Nueva Cita
+                </a>
+                <a href="{% url 'mascotas:crear' %}" 
+                   class="block w-full text-center bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition duration-300">
+                    Registrar Nueva Mascota
+                </a>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">Información de Contacto</h3>
+            <div class="space-y-2 text-gray-600">
+                <p><strong>Teléfono:</strong> (01) 234-5678</p>
+                <p><strong>Email:</strong> contacto@veterinariaamigomascota.com</p>
+                <p><strong>Horario:</strong> Lunes a Sábado, 9:00 AM - 6:00 PM</p>
+                <p><strong>Emergencias 24/7:</strong> (01) 987-6543</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

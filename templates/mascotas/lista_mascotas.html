@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}Mis Mascotas{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold text-gray-900">Mis Mascotas</h1>
+        <a href="{% url 'mascotas:crear' %}" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+            Registrar Nueva Mascota
+        </a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for mascota in mascotas %}
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <div class="p-6">
+                <h2 class="text-xl font-semibold text-gray-900">{{ mascota.nombre }}</h2>
+                <p class="text-gray-600">{{ mascota.get_especie_display }} - {{ mascota.raza }}</p>
+                <p class="text-sm text-gray-500">Fecha de nacimiento: {{ mascota.fecha_nacimiento }}</p>
+                <div class="mt-4">
+                    <a href="{% url 'mascotas:detalle' mascota_id=mascota.id %}" class="text-blue-600 hover:text-blue-800">
+                        Ver detalles
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-span-3 text-center py-8">
+            <p class="text-gray-600">No tienes mascotas registradas.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %} 

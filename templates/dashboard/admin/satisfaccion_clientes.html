@@ -1,0 +1,137 @@
+{% extends 'dashboard/admin/base.html' %}
+
+{% block title %}Reporte de Satisfacción de Clientes{% endblock %}
+
+{% block dashboard_content %}
+<div class="bg-white shadow overflow-hidden sm:rounded-lg">
+    <div class="px-4 py-5 sm:px-6">
+        <h2 class="text-lg leading-6 font-medium text-gray-900">
+            Reporte de Satisfacción de Clientes
+        </h2>
+        <p class="mt-1 text-sm text-gray-500">
+            Análisis detallado de la satisfacción de nuestros clientes
+        </p>
+    </div>
+
+    <div class="border-t border-gray-200">
+        <!-- Resumen General -->
+        <div class="px-4 py-5 sm:p-6">
+            <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">Resumen General</h3>
+            <div class="grid grid-cols-1 gap-5 sm:grid-cols-3">
+                <div class="bg-white overflow-hidden shadow rounded-lg">
+                    <div class="px-4 py-5 sm:p-6">
+                        <dt class="text-sm font-medium text-gray-500 truncate">
+                            Promedio General
+                        </dt>
+                        <dd class="mt-1 text-3xl font-semibold text-gray-900">
+                            {{ promedio_general|floatformat:1 }}/5.0
+                        </dd>
+                    </div>
+                </div>
+
+                <div class="bg-white overflow-hidden shadow rounded-lg">
+                    <div class="px-4 py-5 sm:p-6">
+                        <dt class="text-sm font-medium text-gray-500 truncate">
+                            Total de Evaluaciones
+                        </dt>
+                        <dd class="mt-1 text-3xl font-semibold text-gray-900">
+                            {{ total_evaluaciones }}
+                        </dd>
+                    </div>
+                </div>
+
+                <div class="bg-white overflow-hidden shadow rounded-lg">
+                    <div class="px-4 py-5 sm:p-6">
+                        <dt class="text-sm font-medium text-gray-500 truncate">
+                            Índice de Recomendación
+                        </dt>
+                        <dd class="mt-1 text-3xl font-semibold text-gray-900">
+                            {{ indice_recomendacion }}%
+                        </dd>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Desglose por Categorías -->
+        <div class="px-4 py-5 sm:p-6">
+            <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">Desglose por Categorías</h3>
+            <div class="space-y-4">
+                {% for categoria in categorias %}
+                <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt class="text-sm font-medium text-gray-500">
+                        {{ categoria.nombre }}
+                    </dt>
+                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                        <div class="flex items-center">
+                            <div class="flex-1">
+                                <div class="bg-gray-200 rounded-full h-2.5">
+                                    <div class="bg-blue-600 h-2.5 rounded-full" style="width: {{ categoria.porcentaje }}%"></div>
+                                </div>
+                            </div>
+                            <span class="ml-4 text-sm font-medium text-gray-900">{{ categoria.promedio|floatformat:1 }}/5.0</span>
+                        </div>
+                    </dd>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Comentarios Recientes -->
+        <div class="px-4 py-5 sm:p-6">
+            <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">Comentarios Recientes</h3>
+            <div class="space-y-4">
+                {% for comentario in comentarios_recientes %}
+                <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+                    <div class="px-4 py-5 sm:px-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h4 class="text-sm font-medium text-gray-900">{{ comentario.cliente }}</h4>
+                                <p class="text-sm text-gray-500">{{ comentario.fecha }}</p>
+                            </div>
+                            <div class="flex items-center">
+                                {% for i in "12345" %}
+                                <svg class="h-5 w-5 {% if forloop.counter <= comentario.calificacion %}text-yellow-400{% else %}text-gray-300{% endif %}" 
+                                     fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                </svg>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <p class="mt-2 text-sm text-gray-600">{{ comentario.texto }}</p>
+                    </div>
+                </div>
+                {% empty %}
+                <p class="text-sm text-gray-500">No hay comentarios recientes.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Tendencias -->
+        <div class="px-4 py-5 sm:p-6">
+            <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">Tendencias</h3>
+            <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                <div class="bg-white overflow-hidden shadow rounded-lg">
+                    <div class="px-4 py-5 sm:p-6">
+                        <h4 class="text-sm font-medium text-gray-900 mb-4">Evolución Mensual</h4>
+                        <!-- Aquí iría un gráfico de líneas -->
+                        <div class="h-64 bg-gray-100 rounded-lg flex items-center justify-center">
+                            <p class="text-gray-500">Gráfico de evolución mensual</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white overflow-hidden shadow rounded-lg">
+                    <div class="px-4 py-5 sm:p-6">
+                        <h4 class="text-sm font-medium text-gray-900 mb-4">Distribución de Calificaciones</h4>
+                        <!-- Aquí iría un gráfico de barras -->
+                        <div class="h-64 bg-gray-100 rounded-lg flex items-center justify-center">
+                            <p class="text-gray-500">Gráfico de distribución de calificaciones</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

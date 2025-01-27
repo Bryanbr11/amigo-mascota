@@ -1,0 +1,199 @@
+{% extends 'dashboard/veterinario/base.html' %}
+
+{% block title %}{% if consulta %}Editar{% else %}Nueva{% endif %} Consulta{% endblock %}
+
+{% block dashboard_content %}
+<div class="bg-white shadow overflow-hidden sm:rounded-lg">
+    <div class="px-4 py-5 sm:px-6">
+        <h2 class="text-lg leading-6 font-medium text-gray-900">
+            {% if consulta %}Editar{% else %}Nueva{% endif %} Consulta
+        </h2>
+    </div>
+
+    {% if messages %}
+    <div class="px-4">
+        {% for message in messages %}
+        <div class="rounded-md {% if message.tags == 'error' %}bg-red-50{% else %}bg-green-50{% endif %} p-4 mb-4">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    {% if message.tags == 'error' %}
+                    <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                    </svg>
+                    {% else %}
+                    <svg class="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                    </svg>
+                    {% endif %}
+                </div>
+                <div class="ml-3">
+                    <p class="text-sm font-medium {% if message.tags == 'error' %}text-red-800{% else %}text-green-800{% endif %}">
+                        {{ message }}
+                    </p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="px-4 py-5 sm:px-6">
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+            
+            <div>
+                <label for="{{ form.mascota.id_for_label }}" class="block text-sm font-medium text-gray-700">Mascota</label>
+                <div class="mt-1">
+                    {{ form.mascota }}
+                    {% if form.mascota.errors %}
+                    <div class="mt-2 text-sm text-red-600">
+                        {% for error in form.mascota.errors %}
+                        <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div>
+                <label for="{{ form.tipo_servicio.id_for_label }}" class="block text-sm font-medium text-gray-700">Tipo de Servicio</label>
+                <div class="mt-1">
+                    {{ form.tipo_servicio }}
+                    {% if form.tipo_servicio.errors %}
+                    <div class="mt-2 text-sm text-red-600">
+                        {% for error in form.tipo_servicio.errors %}
+                        <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div>
+                <label for="{{ form.motivo.id_for_label }}" class="block text-sm font-medium text-gray-700">Motivo de la Consulta</label>
+                <div class="mt-1">
+                    {{ form.motivo }}
+                    {% if form.motivo.errors %}
+                    <div class="mt-2 text-sm text-red-600">
+                        {% for error in form.motivo.errors %}
+                        <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div>
+                <label for="{{ form.sintomas.id_for_label }}" class="block text-sm font-medium text-gray-700">Síntomas</label>
+                <div class="mt-1">
+                    {{ form.sintomas }}
+                    {% if form.sintomas.errors %}
+                    <div class="mt-2 text-sm text-red-600">
+                        {% for error in form.sintomas.errors %}
+                        <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div>
+                <label for="{{ form.signos_clinicos.id_for_label }}" class="block text-sm font-medium text-gray-700">Signos Clínicos</label>
+                <div class="mt-1">
+                    {{ form.signos_clinicos }}
+                    {% if form.signos_clinicos.errors %}
+                    <div class="mt-2 text-sm text-red-600">
+                        {% for error in form.signos_clinicos.errors %}
+                        <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div>
+                <label for="{{ form.peso.id_for_label }}" class="block text-sm font-medium text-gray-700">Peso (kg)</label>
+                <div class="mt-1">
+                    {{ form.peso }}
+                    {% if form.peso.errors %}
+                    <div class="mt-2 text-sm text-red-600">
+                        {% for error in form.peso.errors %}
+                        <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div>
+                <label for="{{ form.diagnostico.id_for_label }}" class="block text-sm font-medium text-gray-700">Diagnóstico</label>
+                <div class="mt-1">
+                    {{ form.diagnostico }}
+                    {% if form.diagnostico.errors %}
+                    <div class="mt-2 text-sm text-red-600">
+                        {% for error in form.diagnostico.errors %}
+                        <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div>
+                <label for="{{ form.tratamiento.id_for_label }}" class="block text-sm font-medium text-gray-700">Tratamiento</label>
+                <div class="mt-1">
+                    {{ form.tratamiento }}
+                    {% if form.tratamiento.errors %}
+                    <div class="mt-2 text-sm text-red-600">
+                        {% for error in form.tratamiento.errors %}
+                        <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div>
+                <label for="{{ form.notas_adicionales.id_for_label }}" class="block text-sm font-medium text-gray-700">Notas Adicionales</label>
+                <div class="mt-1">
+                    {{ form.notas_adicionales }}
+                    {% if form.notas_adicionales.errors %}
+                    <div class="mt-2 text-sm text-red-600">
+                        {% for error in form.notas_adicionales.errors %}
+                        <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div>
+                <label for="{{ form.costo.id_for_label }}" class="block text-sm font-medium text-gray-700">Costo</label>
+                <div class="mt-1">
+                    {{ form.costo }}
+                    {% if form.costo.errors %}
+                    <div class="mt-2 text-sm text-red-600">
+                        {% for error in form.costo.errors %}
+                        <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="pt-5">
+                <div class="flex justify-end">
+                    <a href="{% url 'dashboard:veterinario' %}" 
+                       class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        Cancelar
+                    </a>
+                    <button type="submit"
+                            class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        {% if consulta %}Actualizar{% else %}Crear{% endif %} Consulta
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %} 

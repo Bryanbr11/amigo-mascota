@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}{% if mascota %}Editar{% else %}Nueva{% endif %} Mascota{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto py-6 sm:px-6 lg:px-8">
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+            <h1 class="text-2xl font-bold text-gray-800">
+                {% if mascota %}Editar{% else %}Nueva{% endif %} Mascota
+            </h1>
+        </div>
+
+        <form method="post" enctype="multipart/form-data" class="p-6 space-y-6">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+            <div class="bg-red-50 border-l-4 border-red-400 p-4">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm text-red-700">{{ form.non_field_errors.0 }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Nombre -->
+            <div>
+                <label for="{{ form.nombre.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                    Nombre
+                </label>
+                <div class="mt-1">
+                    {{ form.nombre }}
+                </div>
+                {% if form.nombre.errors %}
+                <p class="mt-2 text-sm text-red-600">{{ form.nombre.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Especie -->
+            <div>
+                <label for="{{ form.especie.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                    Especie
+                </label>
+                <div class="mt-1">
+                    {{ form.especie }}
+                </div>
+                {% if form.especie.errors %}
+                <p class="mt-2 text-sm text-red-600">{{ form.especie.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Raza -->
+            <div>
+                <label for="{{ form.raza.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                    Raza
+                </label>
+                <div class="mt-1">
+                    {{ form.raza }}
+                </div>
+                {% if form.raza.errors %}
+                <p class="mt-2 text-sm text-red-600">{{ form.raza.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Fecha de nacimiento -->
+            <div>
+                <label for="{{ form.fecha_nacimiento.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                    Fecha de nacimiento
+                </label>
+                <div class="mt-1">
+                    {{ form.fecha_nacimiento }}
+                </div>
+                {% if form.fecha_nacimiento.errors %}
+                <p class="mt-2 text-sm text-red-600">{{ form.fecha_nacimiento.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Peso -->
+            <div>
+                <label for="{{ form.peso.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                    Peso (kg)
+                </label>
+                <div class="mt-1">
+                    {{ form.peso }}
+                </div>
+                {% if form.peso.errors %}
+                <p class="mt-2 text-sm text-red-600">{{ form.peso.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Foto -->
+            <div>
+                <label for="{{ form.foto.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                    Foto
+                </label>
+                <div class="mt-1">
+                    {% if mascota and mascota.foto %}
+                    <div class="mb-2">
+                        <img src="{{ mascota.foto.url }}" alt="Foto actual" class="h-32 w-32 object-cover rounded-lg">
+                    </div>
+                    {% endif %}
+                    {{ form.foto }}
+                </div>
+                {% if form.foto.errors %}
+                <p class="mt-2 text-sm text-red-600">{{ form.foto.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Botones -->
+            <div class="flex justify-end space-x-3 pt-6 border-t border-gray-200">
+                <a href="{% url 'mascotas:lista' %}" 
+                   class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    Cancelar
+                </a>
+                <button type="submit"
+                        class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    {% if mascota %}Guardar cambios{% else %}Crear mascota{% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/mascotas.js' %}"></script>
+{% endblock %} 

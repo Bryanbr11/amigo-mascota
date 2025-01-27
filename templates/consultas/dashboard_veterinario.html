@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard Veterinario{% endblock %}
+
+{% block content %}
+<div class="flex">
+    <!-- Sidebar -->
+    <div class="w-64 bg-blue-800 min-h-screen p-4">
+        <h2 class="text-white text-xl font-bold mb-4">Menú</h2>
+        <ul class="space-y-2">
+            <li><a href="#" class="text-white hover:text-blue-200">Consultas</a></li>
+            <li><a href="#" class="text-white hover:text-blue-200">Diagnósticos</a></li>
+            <li><a href="#" class="text-white hover:text-blue-200">Historial</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 p-8">
+        <h1 class="text-3xl font-bold mb-8">Dashboard Veterinario</h1>
+
+        <!-- Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h3 class="text-xl font-semibold mb-2">Consultas del día</h3>
+                <p class="text-3xl font-bold text-blue-600">{{ consultas_dia }}</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h3 class="text-xl font-semibold mb-2">Diagnósticos IA</h3>
+                <p class="text-3xl font-bold text-green-600">{{ diagnosticos_ia }}</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h3 class="text-xl font-semibold mb-2">Consultas pendientes</h3>
+                <p class="text-3xl font-bold text-yellow-600">{{ consultas_pendientes }}</p>
+            </div>
+        </div>
+
+        <!-- Tabla de consultas recientes -->
+        <div class="bg-white rounded-lg shadow overflow-hidden">
+            <h2 class="text-2xl font-bold p-4 bg-gray-100">Consultas Recientes</h2>
+            <table class="w-full">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Mascota</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    {% for consulta in consultas_recientes %}
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ consulta.mascota.nombre }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ consulta.fecha|date:"d/m/Y H:i" }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                {{ consulta.estado }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <a href="#" class="text-indigo-600 hover:text-indigo-900">Ver</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

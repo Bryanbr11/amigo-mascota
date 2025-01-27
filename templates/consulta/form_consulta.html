@@ -1,0 +1,219 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if form.instance.pk %}Editar{% else %}Nueva{% endif %} Consulta{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+            <h1 class="text-2xl font-bold text-gray-800">
+                {% if form.instance.pk %}Editar{% else %}Nueva{% endif %} Consulta Médica
+            </h1>
+        </div>
+
+        <form method="post" class="p-6 space-y-6">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+            <div class="bg-red-50 border-l-4 border-red-400 p-4">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm text-red-700">{{ form.non_field_errors }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Información básica -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Mascota -->
+                <div>
+                    <label for="{{ form.mascota.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                        Mascota *
+                    </label>
+                    <div class="mt-1">
+                        {{ form.mascota }}
+                    </div>
+                    {% if form.mascota.errors %}
+                    <p class="mt-2 text-sm text-red-600">{{ form.mascota.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Fecha y Hora -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label for="{{ form.fecha.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                            Fecha *
+                        </label>
+                        <div class="mt-1">
+                            {{ form.fecha }}
+                        </div>
+                        {% if form.fecha.errors %}
+                        <p class="mt-2 text-sm text-red-600">{{ form.fecha.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <label for="{{ form.hora.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                            Hora *
+                        </label>
+                        <div class="mt-1">
+                            {{ form.hora }}
+                        </div>
+                        {% if form.hora.errors %}
+                        <p class="mt-2 text-sm text-red-600">{{ form.hora.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Motivo y Síntomas -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label for="{{ form.motivo_consulta.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                        Motivo de la consulta *
+                    </label>
+                    <div class="mt-1">
+                        {{ form.motivo_consulta }}
+                    </div>
+                    {% if form.motivo_consulta.errors %}
+                    <p class="mt-2 text-sm text-red-600">{{ form.motivo_consulta.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label for="{{ form.sintomas.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                        Síntomas *
+                    </label>
+                    <div class="mt-1">
+                        {{ form.sintomas }}
+                    </div>
+                    {% if form.sintomas.errors %}
+                    <p class="mt-2 text-sm text-red-600">{{ form.sintomas.errors.0 }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Diagnóstico y Tratamiento -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label for="{{ form.diagnostico.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                        Diagnóstico *
+                    </label>
+                    <div class="mt-1">
+                        {{ form.diagnostico }}
+                    </div>
+                    {% if form.diagnostico.errors %}
+                    <p class="mt-2 text-sm text-red-600">{{ form.diagnostico.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label for="{{ form.tratamiento.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                        Tratamiento *
+                    </label>
+                    <div class="mt-1">
+                        {{ form.tratamiento }}
+                    </div>
+                    {% if form.tratamiento.errors %}
+                    <p class="mt-2 text-sm text-red-600">{{ form.tratamiento.errors.0 }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Signos vitales -->
+            <div>
+                <h3 class="text-lg font-medium text-gray-700 mb-4">Signos Vitales</h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div>
+                        <label for="{{ form.temperatura.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                            Temperatura (°C) *
+                        </label>
+                        <div class="mt-1">
+                            {{ form.temperatura }}
+                        </div>
+                        {% if form.temperatura.errors %}
+                        <p class="mt-2 text-sm text-red-600">{{ form.temperatura.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+
+                    <div>
+                        <label for="{{ form.peso.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                            Peso (kg) *
+                        </label>
+                        <div class="mt-1">
+                            {{ form.peso }}
+                        </div>
+                        {% if form.peso.errors %}
+                        <p class="mt-2 text-sm text-red-600">{{ form.peso.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+
+                    <div>
+                        <label for="{{ form.frecuencia_cardiaca.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                            Frec. Cardíaca (lpm) *
+                        </label>
+                        <div class="mt-1">
+                            {{ form.frecuencia_cardiaca }}
+                        </div>
+                        {% if form.frecuencia_cardiaca.errors %}
+                        <p class="mt-2 text-sm text-red-600">{{ form.frecuencia_cardiaca.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+
+                    <div>
+                        <label for="{{ form.frecuencia_respiratoria.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                            Frec. Respiratoria (rpm) *
+                        </label>
+                        <div class="mt-1">
+                            {{ form.frecuencia_respiratoria }}
+                        </div>
+                        {% if form.frecuencia_respiratoria.errors %}
+                        <p class="mt-2 text-sm text-red-600">{{ form.frecuencia_respiratoria.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Observaciones -->
+            <div>
+                <label for="{{ form.observaciones.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                    Observaciones adicionales
+                </label>
+                <div class="mt-1">
+                    {{ form.observaciones }}
+                </div>
+                {% if form.observaciones.errors %}
+                <p class="mt-2 text-sm text-red-600">{{ form.observaciones.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <!-- Botones -->
+            <div class="flex justify-end space-x-3 pt-6 border-t border-gray-200">
+                <a href="{% url 'consulta:lista_consultas' %}" 
+                   class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    Cancelar
+                </a>
+                <button type="submit"
+                        class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    {% if form.instance.pk %}Guardar cambios{% else %}Crear consulta{% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Aquí puedes agregar JavaScript para mejorar la experiencia del formulario
+        // Por ejemplo, validaciones en tiempo real o formateo de campos numéricos
+    });
+</script>
+{% endblock %} 

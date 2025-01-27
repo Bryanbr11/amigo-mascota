@@ -1,0 +1,90 @@
+services:
+  nginx:
+    image: nginx:latest
+    ports:
+      - "8000:80"
+    volumes:
+      - /c/Users/javie/Desktop/workspace/veterinaria-amigo-mascota/backend/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - web
+
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    environment:
+      - ALLOWED_HOSTS='veterinariaamigomascota.com',127.0.0.1,localhost,0.0.0.0
+      - POSTGRES_DB=veterinaria_db
+      - POSTGRES_USER=veterinaria_user
+      - POSTGRES_PASSWORD=veterinaria_password
+      - POSTGRES_HOST=db
+      - DJANGO_SETTINGS_MODULE=core.settings
+
+  celery:
+    build: .
+    command: celery -A core worker -l info
+    volumes:
+      - .:/app
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    environment:
+      - POSTGRES_DB=veterinaria_db
+      - POSTGRES_USER=veterinaria_user
+      - POSTGRES_PASSWORD=veterinaria_password
+      - POSTGRES_HOST=db
+      - DJANGO_SETTINGS_MODULE=core.settings
+
+  celery-beat:
+    build: .
+    command: celery -A core beat -l info
+    volumes:
+      - .:/app
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    environment:
+      - POSTGRES_DB=veterinaria_db
+      - POSTGRES_USER=veterinaria_user
+      - POSTGRES_PASSWORD=veterinaria_password
+      - POSTGRES_HOST=db
+      - DJANGO_SETTINGS_MODULE=core.settings
+
+  db:
+    image: postgres:15
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=veterinaria_db
+      - POSTGRES_USER=veterinaria_user
+      - POSTGRES_PASSWORD=veterinaria_password
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U veterinaria_user -d veterinaria_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:alpine
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:

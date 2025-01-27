@@ -1,0 +1,15 @@
+# Django #
+*.log
+*.pot
+*.pyc
+__pycache__
+db.sqlite3
+media
+
+# Entorno virtual
+venv/
+*.env
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Veterinaria Amigo Mascota{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body>
+    <header class="bg-white shadow">
+        <nav class="container mx-auto px-6 py-3">
+            <div class="flex justify-between items-center">
+                <div class="text-xl font-bold text-gray-800">Veterinaria Amigo Mascota</div>
+                <div>
+                    {% if user.is_authenticated %}
+                        {% if user.is_superuser %}
+                            <a href="{% url 'dashboard:admin' %}" class="text-gray-800 hover:text-blue-600 px-3 py-2">Dashboard</a>
+                        {% elif user.is_veterinario %}
+                            <a href="{% url 'dashboard:veterinario' %}" class="text-gray-800 hover:text-blue-600 px-3 py-2">Dashboard</a>
+                        {% elif user.is_secretaria %}
+                            <a href="{% url 'dashboard:secretaria' %}" class="text-gray-800 hover:text-blue-600 px-3 py-2">Dashboard</a>
+                        {% else %}
+                            <a href="{% url 'dashboard:cliente' %}" class="text-gray-800 hover:text-blue-600 px-3 py-2">Mi Panel</a>
+                        {% endif %}
+                        <a href="{% url 'users:perfil' %}" class="text-gray-800 hover:text-blue-600 px-3 py-2">Perfil</a>
+                        <a href="{% url 'users:logout' %}" class="text-gray-800 hover:text-blue-600 px-3 py-2">Cerrar sesión</a>
+                    {% else %}
+                        <a href="/" class="text-gray-800 hover:text-blue-600 px-3 py-2">Inicio</a>
+                        <a href="#servicios" class="text-gray-800 hover:text-blue-600 px-3 py-2">Servicios</a>
+                        <a href="#contacto" class="text-gray-800 hover:text-blue-600 px-3 py-2">Contacto</a>
+                        <a href="{% url 'users:login' %}" class="text-gray-800 hover:text-blue-600 px-3 py-2">Iniciar sesión</a>
+                        <a href="{% url 'users:register' %}" class="text-gray-800 hover:text-blue-600 px-3 py-2">Registrarse</a>
+                    {% endif %}
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}
+        <section class="bg-blue-600 text-white py-32">
+            <div class="container mx-auto px-6 text-center">
+                <h1 class="text-5xl font-bold mb-4">Cuidado experto para tu mejor amigo</h1>
+                <p class="text-xl mb-8">En Veterinaria Amigo Mascota, tu mascota es nuestra prioridad</p>
+                {% if not user.is_authenticated %}
+                    <a href="{% url 'users:register' %}" class="bg-white text-blue-600 px-8 py-3 rounded-md text-lg font-semibold hover:bg-gray-100">
+                        Registrarse
+                    </a>
+                {% else %}
+                    <a href="{% url 'appointments:crear_cita' %}" class="bg-white text-blue-600 px-8 py-3 rounded-md text-lg font-semibold hover:bg-gray-100">
+                        Agendar una cita
+                    </a>
+                {% endif %}
+            </div>
+        </section>
+
+        <section id="servicios" class="py-16">
+            <div class="container mx-auto px-6">
+                <h2 class="text-3xl font-bold text-center mb-8">Nuestros Servicios</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <h3 class="text-xl font-semibold mb-4">Consultas Generales</h3>
+                        <p>Atención médica completa para el bienestar de tu mascota.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <h3 class="text-xl font-semibold mb-4">Vacunación</h3>
+                        <p>Protección esencial contra enfermedades comunes.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <h3 class="text-xl font-semibold mb-4">Cirugías</h3>
+                        <p>Procedimientos quirúrgicos avanzados con cuidados post-operatorios.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contacto" class="bg-gray-100 py-16">
+            <div class="container mx-auto px-6">
+                <h2 class="text-3xl font-bold text-center mb-8">Contáctanos</h2>
+                <div class="max-w-lg mx-auto">
+                    <form action="#" method="POST" class="space-y-4">
+                        {% csrf_token %}
+                        <div>
+                            <label for="nombre" class="block mb-2">Nombre</label>
+                            <input type="text" 
+                                   id="nombre" 
+                                   name="nombre" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                                   required>
+                        </div>
+                        <div>
+                            <label for="email" class="block mb-2">Email</label>
+                            <input type="email" 
+                                   id="email" 
+                                   name="email" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                                   required>
+                        </div>
+                        <div>
+                            <label for="mensaje" class="block mb-2">Mensaje</label>
+                            <textarea id="mensaje" 
+                                      name="mensaje" 
+                                      rows="4" 
+                                      class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                                      required></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700">
+                            Enviar mensaje
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+        {% endblock %}
+    </main>
+
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-6 text-center">
+            <p>&copy; 2024 Veterinaria Amigo Mascota. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

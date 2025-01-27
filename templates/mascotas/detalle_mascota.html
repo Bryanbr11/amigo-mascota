@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ mascota.nombre }} - Detalle{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto py-6 sm:px-6 lg:px-8">
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <!-- Encabezado -->
+        <div class="px-6 py-4 bg-gray-50 border-b border-gray-200 flex justify-between items-center">
+            <h1 class="text-2xl font-bold text-gray-800">
+                {{ mascota.nombre }}
+            </h1>
+            <div class="flex space-x-3">
+                <a href="{% url 'mascotas:editar' mascota_id=mascota.id %}" 
+                   class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    Editar
+                </a>
+                <a href="{% url 'mascotas:eliminar' mascota_id=mascota.id %}" 
+                   class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                    Eliminar
+                </a>
+            </div>
+        </div>
+
+        <!-- Contenido -->
+        <div class="p-6 space-y-6">
+            <!-- Información básica -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Columna izquierda -->
+                <div class="space-y-6">
+                    <div>
+                        <h3 class="text-lg font-medium text-gray-900">Información General</h3>
+                        <dl class="mt-2 space-y-4">
+                            <div>
+                                <dt class="text-sm font-medium text-gray-500">Especie</dt>
+                                <dd class="mt-1 text-sm text-gray-900">{{ mascota.get_especie_display }}</dd>
+                            </div>
+                            <div>
+                                <dt class="text-sm font-medium text-gray-500">Raza</dt>
+                                <dd class="mt-1 text-sm text-gray-900">{{ mascota.raza }}</dd>
+                            </div>
+                            <div>
+                                <dt class="text-sm font-medium text-gray-500">Fecha de Nacimiento</dt>
+                                <dd class="mt-1 text-sm text-gray-900">{{ mascota.fecha_nacimiento }}</dd>
+                            </div>
+                            <div>
+                                <dt class="text-sm font-medium text-gray-500">Edad</dt>
+                                <dd class="mt-1 text-sm text-gray-900">{{ mascota.edad }} años</dd>
+                            </div>
+                            <div>
+                                <dt class="text-sm font-medium text-gray-500">Peso</dt>
+                                <dd class="mt-1 text-sm text-gray-900">{{ mascota.peso }} kg</dd>
+                            </div>
+                        </dl>
+                    </div>
+                </div>
+
+                <!-- Columna derecha -->
+                <div>
+                    <h3 class="text-lg font-medium text-gray-900">Foto</h3>
+                    <div class="mt-2">
+                        {% if mascota.foto %}
+                        <img src="{{ mascota.foto.url }}" 
+                             alt="Foto de {{ mascota.nombre }}" 
+                             class="h-48 w-48 object-cover rounded-lg shadow-md">
+                        {% else %}
+                        <div class="h-48 w-48 rounded-lg bg-gray-100 flex items-center justify-center">
+                            <svg class="h-24 w-24 text-gray-300" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M4 4h16a2 2 0 012 2v12a2 2 0 01-2 2H4a2 2 0 01-2-2V6c0-1.1.9-2 2-2zm0 2v12h16V6H4zm8 3a2 2 0 110 4 2 2 0 010-4zm0 6a4 4 0 110-8 4 4 0 010 8z"/>
+                            </svg>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Información adicional -->
+            <div class="border-t border-gray-200 pt-6">
+                <h3 class="text-lg font-medium text-gray-900">Información del Propietario</h3>
+                <dl class="mt-2 space-y-4">
+                    <div>
+                        <dt class="text-sm font-medium text-gray-500">Nombre</dt>
+                        <dd class="mt-1 text-sm text-gray-900">{{ mascota.propietario.get_full_name }}</dd>
+                    </div>
+                    <div>
+                        <dt class="text-sm font-medium text-gray-500">Email</dt>
+                        <dd class="mt-1 text-sm text-gray-900">{{ mascota.propietario.email }}</dd>
+                    </div>
+                    {% if mascota.propietario.telefono %}
+                    <div>
+                        <dt class="text-sm font-medium text-gray-500">Teléfono</dt>
+                        <dd class="mt-1 text-sm text-gray-900">{{ mascota.propietario.telefono }}</dd>
+                    </div>
+                    {% endif %}
+                </dl>
+            </div>
+        </div>
+
+        <!-- Pie -->
+        <div class="px-6 py-4 bg-gray-50 border-t border-gray-200">
+            <div class="flex justify-between items-center">
+                <span class="text-sm text-gray-500">
+                    Registrado el {{ mascota.fecha_registro|date:"d/m/Y" }}
+                </span>
+                <a href="{% url 'mascotas:lista' %}" 
+                   class="text-sm text-blue-600 hover:text-blue-800">
+                    Volver a la lista
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
